@@ -4,6 +4,7 @@ import com.valychbreak.moneytransfer.InsufficientBalanceException;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @RequiredArgsConstructor(staticName = "of")
 @EqualsAndHashCode
@@ -23,7 +24,7 @@ public class Balance {
             throw new IllegalArgumentException("Cannot debit negative value");
         }
 
-        this.amount = this.amount.add(amount);
+        this.amount = normalize(this.amount.add(amount));
     }
 
     public void credit(BigDecimal amount) {
@@ -35,10 +36,14 @@ public class Balance {
             throw new InsufficientBalanceException("Not enough balance. Having: " + this.amount + "; to credit: " + amount);
         }
 
-        this.amount = this.amount.subtract(amount);
+        this.amount = normalize(this.amount.subtract(amount));
     }
 
     private boolean isNegative(BigDecimal amount) {
         return amount.compareTo(BigDecimal.ZERO) <= 0;
+    }
+
+    private BigDecimal normalize(BigDecimal amount) {
+        return amount.setScale(2, RoundingMode.HALF_UP);
     }
 }

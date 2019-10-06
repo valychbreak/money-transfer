@@ -2,8 +2,11 @@ package com.valychbreak.moneytransfer.domain;
 
 import com.valychbreak.moneytransfer.InsufficientBalanceException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,12 +15,17 @@ class BalanceTest {
 
     private static final BigDecimal MINUS_ONE = new BigDecimal("-1");
 
-    @Test
-    void shouldAddAmountToBalance() {
-        Balance balance = Balance.of(new BigDecimal(100));
-        balance.debit(BigDecimal.TEN);
+    @ParameterizedTest
+    @ValueSource(doubles = {0.03, 10, 45.54, 1000})
+    void shouldAddAmountToBalance(double amount) {
+        BigDecimal initialAmount = new BigDecimal(100);
+        Balance balance = Balance.of(initialAmount);
 
-        assertThat(balance.getAmount()).isEqualTo(new BigDecimal(110));
+        BigDecimal debitAmount = new BigDecimal(amount);
+        balance.debit(debitAmount);
+
+        BigDecimal expectedBalance = initialAmount.add(debitAmount).setScale(2, RoundingMode.HALF_UP);
+        assertThat(balance.getAmount()).isEqualTo(expectedBalance);
     }
 
     @Test
@@ -32,12 +40,17 @@ class BalanceTest {
         assertThrows(IllegalArgumentException.class, () -> balance.credit(MINUS_ONE));
     }
 
-    @Test
-    void shouldSubtractAmountFromBalance() {
-        Balance balance = Balance.of(new BigDecimal(100));
-        balance.credit(BigDecimal.TEN);
+    @ParameterizedTest
+    @ValueSource(doubles = {0.01, 1, 99})
+    void shouldSubtractAmountFromBalance(double amount) {
+        BigDecimal initialAmount = new BigDecimal(100);
+        Balance balance = Balance.of(initialAmount);
 
-        assertThat(balance.getAmount()).isEqualTo(new BigDecimal(90));
+        BigDecimal creditAmount = new BigDecimal(amount);
+        balance.credit(creditAmount);
+
+        BigDecimal expectedAmount = initialAmount.subtract(creditAmount).setScale(2, RoundingMode.HALF_UP);
+        assertThat(balance.getAmount()).isEqualTo(expectedAmount);
     }
 
     @Test
