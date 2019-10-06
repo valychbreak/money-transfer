@@ -1,39 +1,46 @@
 package com.valychbreak.moneytransfer.repository;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.persist.UnitOfWork;
 import com.valychbreak.moneytransfer.config.PersistenceModule;
 import com.valychbreak.moneytransfer.domain.Account;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import static com.valychbreak.moneytransfer.service.AccountBuilder.anAccount;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AccountRepositoryIntegrationTest {
 
+    private static Injector injector;
+
+    @Inject
     private AccountRepository accountRepository;
-    private EntityManager entityManager;
+
+    @Inject
+    private UnitOfWork unitOfWork;
+
+    @BeforeAll
+    static void beforeAll() {
+        injector = Guice.createInjector(new PersistenceModule(), new AccountRepositoryBindingModule());
+    }
 
     @BeforeEach
     void setUp() {
-        Injector injector = Guice.createInjector(new PersistenceModule(), new AccountRepositoryBindingModule());
-        entityManager = injector.getInstance(EntityManager.class);
-        entityManager.getTransaction().begin();
+        injector.injectMembers(this);
+        assertThat(unitOfWork).isNotNull();
 
-        accountRepository = new AccountRepository(entityManager);
+        unitOfWork.begin();
     }
 
     @AfterEach
     void tearDown() {
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        unitOfWork.end();
     }
 
     @Test
@@ -44,8 +51,7 @@ class AccountRepositoryIntegrationTest {
                 .withBalance(5000)
                 .build();
 
-        entityManager.persist(account);
-        entityManager.flush();
+        accountRepository.create(account);
 
         Account accountByNumber = accountRepository.findByAccountNumber(accountNumber);
         assertThat(accountByNumber).isEqualToComparingFieldByField(account);
