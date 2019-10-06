@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <sparkjava.version>2.7.2</sparkjava.version>
+        <sparkjava.version>2.9.1</sparkjava.version>
         <junit-jupiter.version>5.5.2</junit-jupiter.version>
         <giuce.version>4.2.2</giuce.version>
     </properties>
