@@ -1,6 +1,7 @@
 package com.valychbreak.moneytransfer.service;
 
 import com.valychbreak.moneytransfer.domain.Account;
+import com.valychbreak.moneytransfer.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
 
@@ -14,6 +15,10 @@ public class AccountAssetService {
 
         if (amount.compareTo(ZERO) < 0 || amount.equals(ZERO)) {
             throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        if (sender.getBalance().getAmount().compareTo(amount) < 0) {
+            throw new InsufficientBalanceException();
         }
 
         sender.getBalance().credit(amount);

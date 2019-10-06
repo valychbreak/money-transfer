@@ -2,6 +2,7 @@ package com.valychbreak.moneytransfer.service;
 
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.domain.Balance;
+import com.valychbreak.moneytransfer.exception.InsufficientBalanceException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,5 +73,13 @@ class AccountAssetServiceTest {
         });
 
         assertThat(thrownException.getMessage()).isEqualTo("Amount must be positive");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenSenderBalanceIsLessThanAmount() {
+        Account sender = aRandomAccount().withBalance(10).build();
+        Account receiver = aRandomAccount().build();
+
+        assertThrows(InsufficientBalanceException.class, () -> accountAssetService.transfer(sender, receiver, new BigDecimal(11)));
     }
 }
