@@ -1,12 +1,14 @@
 package com.valychbreak.moneytransfer.repository;
 
-import com.valychbreak.moneytransfer.HibernateUtil;
 import com.valychbreak.moneytransfer.domain.Account;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import static com.valychbreak.moneytransfer.service.AccountBuilder.anAccount;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,21 +16,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AccountRepositoryIntegrationTest {
 
     private AccountRepository accountRepository;
-    private Session session;
+    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
     void setUp() {
-        session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        entityManagerFactory = Persistence.createEntityManagerFactory("db-manager");
+        entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
 
-        accountRepository = new AccountRepository(session);
+        accountRepository = new AccountRepository(entityManager);
     }
 
     @AfterEach
     void tearDown() {
-        session.getTransaction().commit();
-        session.close();
-        HibernateUtil.shutdown();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        entityManagerFactory.close();
     }
 
     @Test
@@ -39,8 +43,8 @@ class AccountRepositoryIntegrationTest {
                 .withBalance(5000)
                 .build();
 
-        session.persist(account);
-        session.flush();
+        entityManager.persist(account);
+        entityManager.flush();
 
         Account accountByNumber = accountRepository.findByAccountNumber(accountNumber);
         assertThat(accountByNumber).isEqualToComparingFieldByField(account);
