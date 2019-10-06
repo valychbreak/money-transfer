@@ -1,5 +1,8 @@
 package com.valychbreak.moneytransfer.repository;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.valychbreak.moneytransfer.config.PersistenceModule;
 import com.valychbreak.moneytransfer.domain.Account;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -17,12 +20,11 @@ class AccountRepositoryIntegrationTest {
 
     private AccountRepository accountRepository;
     private EntityManager entityManager;
-    private EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
     void setUp() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("db-manager");
-        entityManager = entityManagerFactory.createEntityManager();
+        Injector injector = Guice.createInjector(new PersistenceModule(), new AccountRepositoryBindingModule());
+        entityManager = injector.getInstance(EntityManager.class);
         entityManager.getTransaction().begin();
 
         accountRepository = new AccountRepository(entityManager);
@@ -32,7 +34,6 @@ class AccountRepositoryIntegrationTest {
     void tearDown() {
         entityManager.getTransaction().commit();
         entityManager.close();
-        entityManagerFactory.close();
     }
 
     @Test

@@ -10,6 +10,7 @@
 
     <properties>
         <junit-jupiter.version>5.5.2</junit-jupiter.version>
+        <giuce.version>4.2.2</giuce.version>
     </properties>
 
     <dependencies>
@@ -22,7 +23,13 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>4.2.2</version>
+            <version>${giuce.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-persist</artifactId>
+            <version>${giuce.version}</version>
         </dependency>
 
         <dependency>
