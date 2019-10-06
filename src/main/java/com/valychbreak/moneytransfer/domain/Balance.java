@@ -1,6 +1,6 @@
 package com.valychbreak.moneytransfer.domain;
 
-import com.valychbreak.moneytransfer.InsufficientBalanceException;
+import com.valychbreak.moneytransfer.exception.InsufficientBalanceException;
 import lombok.*;
 
 import javax.persistence.Embeddable;

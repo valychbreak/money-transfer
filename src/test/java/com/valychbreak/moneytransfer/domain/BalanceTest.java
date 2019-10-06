@@ -1,6 +1,6 @@
 package com.valychbreak.moneytransfer.domain;
 
-import com.valychbreak.moneytransfer.InsufficientBalanceException;
+import com.valychbreak.moneytransfer.exception.InsufficientBalanceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
