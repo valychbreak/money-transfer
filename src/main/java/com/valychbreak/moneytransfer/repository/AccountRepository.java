@@ -3,6 +3,7 @@ package com.valychbreak.moneytransfer.repository;
 import com.valychbreak.moneytransfer.domain.Account;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 public class AccountRepository {
 
@@ -13,6 +14,10 @@ public class AccountRepository {
     }
 
     public Account findByAccountNumber(String number) {
-        return null;
+        TypedQuery<Account> accountByNumberQuery = entityManager
+                .createQuery("SELECT account From Account account where account.number = :number", Account.class)
+                .setParameter("number", number);
+
+        return accountByNumberQuery.getSingleResult();
     }
 }

@@ -3,14 +3,19 @@ package com.valychbreak.moneytransfer.domain;
 import com.valychbreak.moneytransfer.InsufficientBalanceException;
 import lombok.*;
 
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Embeddable
 @EqualsAndHashCode
 @ToString
 public class Balance {
 
     @Getter
+    @Setter(AccessLevel.PROTECTED)
+    @NotNull
     private BigDecimal amount;
 
     public Balance() {
