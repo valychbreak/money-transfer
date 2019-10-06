@@ -6,17 +6,23 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@RequiredArgsConstructor(staticName = "of")
 @EqualsAndHashCode
 @ToString
 public class Balance {
 
     @Getter
-    @NonNull
     private BigDecimal amount;
 
     public Balance() {
         this.amount = BigDecimal.ZERO;
+    }
+
+    private Balance(BigDecimal amount) {
+        this.amount = normalize(amount);
+    }
+
+    public static Balance of(BigDecimal amount) {
+        return new Balance(amount);
     }
 
     public void debit(BigDecimal amount) {

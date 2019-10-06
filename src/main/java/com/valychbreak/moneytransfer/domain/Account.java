@@ -6,7 +6,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Account {
-    private Long id;
+    @EqualsAndHashCode.Include
+    private String number;
     private Balance balance;
 }

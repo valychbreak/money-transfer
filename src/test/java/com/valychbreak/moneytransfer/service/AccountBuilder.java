@@ -2,21 +2,34 @@ package com.valychbreak.moneytransfer.service;
 
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.domain.Balance;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.math.BigDecimal;
 
 public class AccountBuilder {
-    private Long id;
+    private String number;
     private Balance balance;
 
     private AccountBuilder() { }
 
     public static AccountBuilder anAccount() {
-        return new AccountBuilder();
+        return new AccountBuilder().withBalance(0);
     }
 
-    public AccountBuilder withId(Long id) {
-        this.id = id;
+    public static AccountBuilder aRandomAccount() {
+        return new AccountBuilder()
+                .withRandomValidNumber()
+                .withBalance(RandomUtils.nextInt(100, 10000));
+    }
+
+    public AccountBuilder withRandomValidNumber() {
+        this.number = RandomStringUtils.randomAlphabetic(26);
+        return this;
+    }
+
+    public AccountBuilder withNumber(String number) {
+        this.number = number;
         return this;
     }
 
@@ -31,6 +44,6 @@ public class AccountBuilder {
     }
 
     public Account build() {
-        return new Account(id, balance);
+        return new Account(number, balance);
     }
 }
