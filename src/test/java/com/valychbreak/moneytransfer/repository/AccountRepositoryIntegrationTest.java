@@ -3,11 +3,9 @@ package com.valychbreak.moneytransfer.repository;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.persist.UnitOfWork;
 import com.valychbreak.moneytransfer.config.PersistenceModule;
 import com.valychbreak.moneytransfer.domain.Account;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +20,6 @@ class AccountRepositoryIntegrationTest {
     @Inject
     private AccountRepository accountRepository;
 
-    @Inject
-    private UnitOfWork unitOfWork;
-
     @BeforeAll
     static void beforeAll() {
         injector = Guice.createInjector(new PersistenceModule(), new RepositoryModule());
@@ -33,14 +28,6 @@ class AccountRepositoryIntegrationTest {
     @BeforeEach
     void setUp() {
         injector.injectMembers(this);
-        assertThat(unitOfWork).isNotNull();
-
-        unitOfWork.begin();
-    }
-
-    @AfterEach
-    void tearDown() {
-        unitOfWork.end();
     }
 
     @Test
