@@ -14,7 +14,7 @@ public class Application {
     }
 
     static void establishRoutes() {
-        post("/transfer", "application/x-www-form-urlencoded", (req, res) -> {
+        post("/transfer", "application/json", (req, res) -> {
             res.type("application/json");
             return "{\"status\": \"Hello, world!\"}";
         });

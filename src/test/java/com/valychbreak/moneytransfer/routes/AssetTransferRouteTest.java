@@ -18,7 +18,7 @@ class AssetTransferRouteTest {
     void shouldReturnStatusOk() {
         given()
                 .urlEncodingEnabled(true)
-                .accept(ContentType.URLENC)
+                .accept(ContentType.JSON)
             .when()
                 .post("/transfer")
             .then()
@@ -30,7 +30,7 @@ class AssetTransferRouteTest {
     @ParameterizedTest
     @EnumSource(
             value = ContentType.class,
-            names = {"ANY", "URLENC"},
+            names = {"ANY", "JSON"},
             mode = EXCLUDE)
     void shouldNotAcceptAnyButUrlEncodedData(ContentType contentType) {
         given()
