@@ -22,6 +22,7 @@ public class Application {
         AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
 
         post("/transfer", "application/json", assetTransferController::handle);
+
         exception(RequestException.class, (exception, req, res) -> {
             res.status(400);
             res.type("application/json");

@@ -2,6 +2,7 @@ package com.valychbreak.moneytransfer.routes;
 
 import com.valychbreak.moneytransfer.ApiTestExtension;
 import com.valychbreak.moneytransfer.domain.Account;
+import com.valychbreak.moneytransfer.domain.Balance;
 import com.valychbreak.moneytransfer.repository.AccountRepository;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 
 import static com.valychbreak.moneytransfer.service.AccountBuilder.anAccount;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
@@ -53,8 +55,13 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(200)
-                .contentType(ContentType.JSON)
-                .body("status", equalTo("Hello, world!"));
+                .contentType(ContentType.JSON);
+
+        senderAccount = accountRepository.findByAccountNumber(SENDER_ACCOUNT_NUMBER);
+        receiverAccount = accountRepository.findByAccountNumber(RECEIVER_ACCOUNT_NUMBER);
+
+        assertThat(senderAccount.getBalance()).isEqualTo(Balance.of(new BigDecimal(4990)));
+        assertThat(receiverAccount.getBalance()).isEqualTo(Balance.of(new BigDecimal(110)));
     }
 
     @ParameterizedTest
