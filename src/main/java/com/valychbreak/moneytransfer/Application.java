@@ -13,7 +13,7 @@ public class Application {
         establishRoutes();
     }
 
-    public static void establishRoutes() {
+    static void establishRoutes() {
         post("/transfer", "application/x-www-form-urlencoded", (req, res) -> {
             res.type("application/json");
             return "{\"status\": \"Hello, world!\"}";
