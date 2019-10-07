@@ -14,11 +14,11 @@ public class Application {
     public static void main(String[] args) {
         port(8080);
 
-        establishRoutes();
+        Injector injector = Guice.createInjector(new ControllerModule());
+        establishRoutes(injector);
     }
 
-    static void establishRoutes() {
-        Injector injector = Guice.createInjector(new ControllerModule());
+    static void establishRoutes(Injector injector) {
         AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
 
         post("/transfer", "application/json", assetTransferController::handle);
