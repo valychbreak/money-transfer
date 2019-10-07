@@ -1,5 +1,10 @@
 package com.valychbreak.moneytransfer;
 
+import com.google.inject.Binding;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.valychbreak.moneytransfer.controller.AssetTransferController;
+import com.valychbreak.moneytransfer.controller.ControllerModule;
 import lombok.extern.java.Log;
 
 import static spark.Spark.port;
@@ -14,9 +19,9 @@ public class Application {
     }
 
     static void establishRoutes() {
-        post("/transfer", "application/json", (req, res) -> {
-            res.type("application/json");
-            return "{\"status\": \"Hello, world!\"}";
-        });
+        Injector injector = Guice.createInjector(new ControllerModule());
+        AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
+
+        post("/transfer", "application/json", assetTransferController::handle);
     }
 }
