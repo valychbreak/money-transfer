@@ -3,7 +3,6 @@ package com.valychbreak.moneytransfer;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.valychbreak.moneytransfer.controller.AssetTransferController;
-import com.valychbreak.moneytransfer.controller.ControllerModule;
 import com.valychbreak.moneytransfer.exception.RequestException;
 import lombok.extern.java.Log;
 
@@ -14,7 +13,7 @@ public class Application {
     public static void main(String[] args) {
         port(8080);
 
-        Injector injector = Guice.createInjector(new ControllerModule());
+        Injector injector = Guice.createInjector(new MainModule());
         establishRoutes(injector);
     }
 

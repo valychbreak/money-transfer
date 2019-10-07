@@ -2,9 +2,6 @@ package com.valychbreak.moneytransfer;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.valychbreak.moneytransfer.config.PersistenceModule;
-import com.valychbreak.moneytransfer.controller.ControllerModule;
-import com.valychbreak.moneytransfer.repository.AccountRepositoryBindingModule;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -14,7 +11,7 @@ import spark.Spark;
 
 public class ApiTestExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
 
-    private static final Injector INJECTOR = Guice.createInjector(new PersistenceModule(), new AccountRepositoryBindingModule(), new ControllerModule());
+    private static final Injector INJECTOR = Guice.createInjector(new MainModule());
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {

@@ -27,7 +27,7 @@ class AccountRepositoryIntegrationTest {
 
     @BeforeAll
     static void beforeAll() {
-        injector = Guice.createInjector(new PersistenceModule(), new AccountRepositoryBindingModule());
+        injector = Guice.createInjector(new PersistenceModule(), new RepositoryModule());
     }
 
     @BeforeEach
