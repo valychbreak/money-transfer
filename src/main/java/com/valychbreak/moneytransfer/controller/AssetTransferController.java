@@ -25,7 +25,7 @@ public class AssetTransferController {
         this.accountAssetService = accountAssetService;
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public String handle(Request request, Response response) throws RequestException {
         String senderAccountNumber =
                 getParamValue(request, "sender_account")
