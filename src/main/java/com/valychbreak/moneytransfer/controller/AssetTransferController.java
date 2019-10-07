@@ -42,8 +42,6 @@ public class AssetTransferController {
         Account senderAccount = accountRepository.findByAccountNumber(senderAccountNumber);
         Account receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber);
         accountAssetService.transfer(senderAccount, receiverAccount, new BigDecimal(assetAmountValue));
-
-        response.type("application/json");
         return "{}";
     }
 

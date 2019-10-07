@@ -22,6 +22,8 @@ public class Application {
 
         post("/transfer", "application/json", assetTransferController::handle);
 
+        after((req, res) -> res.type("application/json"));
+
         exception(RequestException.class, (exception, req, res) -> {
             res.status(400);
             res.type("application/json");
