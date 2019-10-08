@@ -75,7 +75,9 @@ class AssetTransferRouteTest {
             .when()
                 .post("/transfer")
             .then()
-                .statusCode(404);
+                .statusCode(400)
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("Endpoint with requested parameters does not exist"));
     }
 
     @Test

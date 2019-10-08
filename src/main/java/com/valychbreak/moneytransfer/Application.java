@@ -27,6 +27,12 @@ public class Application {
 
         after((req, res) -> res.type("application/json"));
 
+        notFound(((req, res) -> {
+            ResponseError responseError = ResponseError.of("Endpoint with requested parameters does not exist");
+            res.status(400);
+            return json(responseError);
+        }));
+
         exception(RequestException.class, (exception, req, res) -> {
             res.status(400);
             res.type("application/json");
