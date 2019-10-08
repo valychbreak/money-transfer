@@ -3,6 +3,7 @@ package com.valychbreak.moneytransfer.controller;
 import com.google.inject.persist.Transactional;
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.exception.RequestException;
+import com.valychbreak.moneytransfer.http.ResponseEntity;
 import com.valychbreak.moneytransfer.repository.AccountRepository;
 import com.valychbreak.moneytransfer.service.AccountAssetService;
 import spark.Request;
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Singleton
-public class AssetTransferController {
+public class AssetTransferController extends AbstractController {
 
     private final AccountRepository accountRepository;
     private final AccountAssetService accountAssetService;
@@ -25,8 +26,9 @@ public class AssetTransferController {
         this.accountAssetService = accountAssetService;
     }
 
+    @Override
     @Transactional(rollbackOn = Exception.class)
-    public String handle(Request request, Response response) throws RequestException {
+    protected ResponseEntity<?> doHandle(Request request, Response response) throws RequestException {
         String senderAccountNumber =
                 getParamValue(request, "sender_account")
                         .orElseThrow(() -> new RequestException("'sender_account' param is not specified"));
@@ -42,10 +44,11 @@ public class AssetTransferController {
         Account senderAccount = accountRepository.findByAccountNumber(senderAccountNumber);
         Account receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber);
         accountAssetService.transfer(senderAccount, receiverAccount, new BigDecimal(assetAmountValue));
-        return "{}";
+
+        return ResponseEntity.empty();
     }
 
-    public Optional<String> getParamValue(Request request, String paramName) {
+    private Optional<String> getParamValue(Request request, String paramName) {
         return Optional.ofNullable(request.queryParams(paramName));
     }
 }
