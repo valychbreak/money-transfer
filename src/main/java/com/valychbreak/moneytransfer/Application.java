@@ -5,6 +5,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.valychbreak.moneytransfer.controller.AssetTransferController;
 import com.valychbreak.moneytransfer.exception.RequestException;
+import com.valychbreak.moneytransfer.http.HttpContentType;
+import com.valychbreak.moneytransfer.http.HttpStatus;
 import com.valychbreak.moneytransfer.http.ResponseError;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,19 +25,19 @@ public class Application {
     static void establishRoutes(Injector injector) {
         final AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
 
-        post("/transfer", "application/json", assetTransferController::handle);
+        post("/transfer", HttpContentType.APPLICATION_JSON, assetTransferController::handle);
 
-        after((req, res) -> res.type("application/json"));
+        after((req, res) -> res.type(HttpContentType.APPLICATION_JSON));
 
         notFound(((req, res) -> {
             ResponseError responseError = ResponseError.of("Endpoint with requested parameters does not exist");
-            res.status(400);
+            res.status(HttpStatus.BAD_REQUEST);
             return json(responseError);
         }));
 
         exception(RequestException.class, (exception, req, res) -> {
-            res.status(400);
-            res.type("application/json");
+            res.status(HttpStatus.BAD_REQUEST);
+            res.type(HttpContentType.APPLICATION_JSON);
 
             ResponseError responseError = ResponseError.of(exception);
 

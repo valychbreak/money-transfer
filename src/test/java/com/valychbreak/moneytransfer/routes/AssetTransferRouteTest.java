@@ -3,6 +3,7 @@ package com.valychbreak.moneytransfer.routes;
 import com.valychbreak.moneytransfer.ApiTestExtension;
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.domain.Balance;
+import com.valychbreak.moneytransfer.http.HttpStatus;
 import com.valychbreak.moneytransfer.repository.AccountRepository;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -54,7 +55,7 @@ class AssetTransferRouteTest {
             .when()
                 .post("/transfer")
             .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.OK)
                 .contentType(ContentType.JSON);
 
         senderAccount = accountRepository.findByAccountNumber(SENDER_ACCOUNT_NUMBER);
@@ -75,7 +76,7 @@ class AssetTransferRouteTest {
             .when()
                 .post("/transfer")
             .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.BAD_REQUEST)
                 .body("data.error", equalTo("Invalid request"))
                 .body("data.error_description", equalTo("Endpoint with requested parameters does not exist"));
     }
@@ -87,7 +88,7 @@ class AssetTransferRouteTest {
             .when()
                 .post("/transfer")
             .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.BAD_REQUEST)
                 .body("data.error", equalTo("Invalid request"))
                 .body("data.error_description", equalTo("'sender_account' param is not specified"));
     }
@@ -101,7 +102,7 @@ class AssetTransferRouteTest {
             .when()
                 .post("/transfer")
             .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.BAD_REQUEST)
                 .body("data.error", equalTo("Invalid request"))
                 .body("data.error_description", equalTo("'receiver_account' param is not specified"));
     }
@@ -116,7 +117,7 @@ class AssetTransferRouteTest {
             .when()
                 .post("/transfer")
             .then()
-                .statusCode(400)
+                .statusCode(HttpStatus.BAD_REQUEST)
                 .body("data.error", equalTo("Invalid request"))
                 .body("data.error_description", equalTo("'asset_amount' param is not specified"));
     }
