@@ -1,12 +1,13 @@
 package com.valychbreak.moneytransfer.http;
 
-import lombok.Getter;
+public class ResponseError extends ResponseEntity<ErrorEntity> {
 
-public class ResponseError {
-    @Getter
-    private final String error;
+    private ResponseError(ErrorEntity errorEntity) {
+        super(errorEntity);
+    }
 
-    public ResponseError(Exception exception) {
-        this.error = exception.getMessage();
+    public static ResponseError of(Exception exception) {
+        ErrorEntity errorEntity = new ErrorEntity("Invalid request", exception.getMessage());
+        return new ResponseError(errorEntity);
     }
 }

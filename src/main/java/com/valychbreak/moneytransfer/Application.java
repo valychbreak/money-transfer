@@ -31,12 +31,15 @@ public class Application {
         exception(RequestException.class, (exception, req, res) -> {
             res.status(400);
             res.type("application/json");
-            ResponseError responseError = new ResponseError(exception);
+
+            ResponseError responseError = ResponseError.of(exception);
+
             try {
                 String errorAsJson = objectMapper.writeValueAsString(responseError);
                 res.body(errorAsJson);
             } catch (JsonProcessingException e) {
                 log.error("Could not construct JSON of response error: [{}]", responseError, e);
+                res.body("{ \"data\": {\"error\":\"Failed to construct response entity\" }");
             }
         });
     }

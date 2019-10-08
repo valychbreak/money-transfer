@@ -86,7 +86,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(400)
-                .body("error", equalTo("'sender_account' param is not specified"));
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("'sender_account' param is not specified"));
     }
 
     @Test
@@ -99,7 +100,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(400)
-                .body("error", equalTo("'receiver_account' param is not specified"));
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("'receiver_account' param is not specified"));
     }
 
     @Test
@@ -113,6 +115,7 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(400)
-                .body("error", equalTo("'asset_amount' param is not specified"));
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("'asset_amount' param is not specified"));
     }
 }
