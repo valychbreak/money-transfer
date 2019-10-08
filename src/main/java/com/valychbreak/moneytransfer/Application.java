@@ -1,14 +1,17 @@
 package com.valychbreak.moneytransfer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.valychbreak.moneytransfer.controller.AssetTransferController;
 import com.valychbreak.moneytransfer.exception.RequestException;
-import lombok.extern.java.Log;
+import com.valychbreak.moneytransfer.http.ResponseError;
+import lombok.extern.slf4j.Slf4j;
 
 import static spark.Spark.*;
 
-@Log
+@Slf4j
 public class Application {
     public static void main(String[] args) {
         port(8080);
@@ -18,7 +21,8 @@ public class Application {
     }
 
     static void establishRoutes(Injector injector) {
-        AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
+        final AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
+        final ObjectMapper objectMapper = new ObjectMapper();
 
         post("/transfer", "application/json", assetTransferController::handle);
 
@@ -27,7 +31,13 @@ public class Application {
         exception(RequestException.class, (exception, req, res) -> {
             res.status(400);
             res.type("application/json");
-            res.body("{\"error\": \"" + exception.getMessage() + "\"}");
+            ResponseError responseError = new ResponseError(exception);
+            try {
+                String errorAsJson = objectMapper.writeValueAsString(responseError);
+                res.body(errorAsJson);
+            } catch (JsonProcessingException e) {
+                log.error("Could not construct JSON of response error: [{}]", responseError, e);
+            }
         });
     }
 }
