@@ -12,20 +12,22 @@ import spark.Spark;
 
 public class ApiTestExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
 
-    private static final Injector INJECTOR = Guice.createInjector(new MainModule());
+    private Injector injector;
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        Spark.port(8181);
         RestAssured.baseURI = "http://localhost:8181/";
 
-        Application.establishRoutes(INJECTOR);
+        SparkApplicationLauncher sparkApplicationLauncher = new SparkApplicationLauncher(8181);
+        sparkApplicationLauncher.launch();
         Spark.awaitInitialization();
+
+        injector = sparkApplicationLauncher.getInjector();
     }
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        INJECTOR.injectMembers(extensionContext.getRequiredTestInstance());
+        injector.injectMembers(extensionContext.getRequiredTestInstance());
     }
 
     @Override
