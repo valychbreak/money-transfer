@@ -2,6 +2,7 @@ package com.valychbreak.moneytransfer.controller;
 
 import com.google.inject.persist.Transactional;
 import com.valychbreak.moneytransfer.domain.Account;
+import com.valychbreak.moneytransfer.dto.AssetTransferDto;
 import com.valychbreak.moneytransfer.exception.DataValidationException;
 import com.valychbreak.moneytransfer.exception.RequestException;
 import com.valychbreak.moneytransfer.http.ResponseEntity;
@@ -16,8 +17,6 @@ import javax.inject.Singleton;
 import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.util.Optional;
-
-import static java.math.BigDecimal.ZERO;
 
 @Slf4j
 @Singleton
@@ -35,6 +34,22 @@ public class AssetTransferController extends AbstractController {
     @Override
     @Transactional(rollbackOn = Exception.class)
     protected ResponseEntity<?> doHandle(Request request, Response response) throws RequestException {
+
+        AssetTransferDto assetTransferDto = getAssetTransferDto(request);
+
+        Account senderAccount = findAccount(assetTransferDto.getSenderAccountNumber());
+        Account receiverAccount = findAccount(assetTransferDto.getReceiverAccountNumber());
+
+        try {
+            accountAssetService.transfer(senderAccount, receiverAccount, assetTransferDto.getTransferAmount());
+        } catch (DataValidationException e) {
+            throw new RequestException(e.getMessage());
+        }
+
+        return ResponseEntity.empty();
+    }
+
+    private AssetTransferDto getAssetTransferDto(Request request) throws RequestException {
         String senderAccountNumber =
                 getParamValue(request, "sender_account")
                         .orElseThrow(() -> new RequestException("'sender_account' param is not specified"));
@@ -54,16 +69,7 @@ public class AssetTransferController extends AbstractController {
             throw new RequestException("'asset_amount' param must be a number");
         }
 
-        Account senderAccount = findAccount(senderAccountNumber);
-        Account receiverAccount = findAccount(receiverAccountNumber);
-
-         try {
-            accountAssetService.transfer(senderAccount, receiverAccount, transferAmount);
-        } catch (DataValidationException e) {
-            throw new RequestException(e.getMessage());
-        }
-
-        return ResponseEntity.empty();
+        return new AssetTransferDto(senderAccountNumber, receiverAccountNumber, transferAmount);
     }
 
     private Account findAccount(String senderAccountNumber) throws RequestException {
