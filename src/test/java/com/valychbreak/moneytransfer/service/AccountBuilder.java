@@ -44,6 +44,6 @@ public class AccountBuilder {
     }
 
     public Account build() {
-        return new Account(number, balance);
+        return new Account(null, number, balance);
     }
 }

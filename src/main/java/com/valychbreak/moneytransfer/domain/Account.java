@@ -16,7 +16,10 @@ public class Account {
     public static final int ACCOUNT_NUMBER_LENGTH = 26;
 
     @Id
-    @Column(length = ACCOUNT_NUMBER_LENGTH)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    @Column(length = ACCOUNT_NUMBER_LENGTH, nullable = false, unique = true)
     @EqualsAndHashCode.Include
     private String number;
 
