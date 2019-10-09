@@ -1,6 +1,7 @@
-package com.valychbreak.moneytransfer.repository;
+package com.valychbreak.moneytransfer.config;
 
 import com.google.inject.AbstractModule;
+import com.valychbreak.moneytransfer.repository.AccountRepository;
 
 public class RepositoryModule extends AbstractModule {
     @Override

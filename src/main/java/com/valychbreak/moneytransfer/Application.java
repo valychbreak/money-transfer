@@ -3,6 +3,7 @@ package com.valychbreak.moneytransfer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.valychbreak.moneytransfer.config.MainModule;
 import com.valychbreak.moneytransfer.controller.AssetTransferController;
 import com.valychbreak.moneytransfer.exception.RequestException;
 import com.valychbreak.moneytransfer.http.HttpContentType;

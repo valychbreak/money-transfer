@@ -2,6 +2,7 @@ package com.valychbreak.moneytransfer;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.valychbreak.moneytransfer.config.MainModule;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;

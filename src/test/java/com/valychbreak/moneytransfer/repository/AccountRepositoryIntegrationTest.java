@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.valychbreak.moneytransfer.config.PersistenceModule;
+import com.valychbreak.moneytransfer.config.RepositoryModule;
 import com.valychbreak.moneytransfer.domain.Account;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
