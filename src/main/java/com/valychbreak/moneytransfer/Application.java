@@ -33,21 +33,6 @@ public class Application {
         establishRoutes(injector);
     }
 
-    private static void createTestAccounts(Injector injector) {
-        AccountRepository accountRepository = injector.getInstance(AccountRepository.class);
-
-        Account accountOne = new Account();
-        accountOne.setNumber("19806578940000111122223333");
-        accountOne.setBalance(Balance.of(new BigDecimal(1_000_000)));
-
-        Account accountTwo = new Account();
-        accountTwo.setNumber("19806578940000999988887777");
-        accountTwo.setBalance(Balance.of(new BigDecimal(1_000_000)));
-
-        accountRepository.create(accountOne);
-        accountRepository.create(accountTwo);
-    }
-
     static void establishRoutes(Injector injector) {
         final AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
         final AccountController accountController = injector.getInstance(AccountController.class);
@@ -79,5 +64,20 @@ public class Application {
                 res.body("{\"error\":\"Failed to construct response entity\"}");
             }
         });
+    }
+
+    private static void createTestAccounts(Injector injector) {
+        AccountRepository accountRepository = injector.getInstance(AccountRepository.class);
+
+        Account accountOne = new Account();
+        accountOne.setNumber("19806578940000111122223333");
+        accountOne.setBalance(Balance.of(new BigDecimal(1_000_000)));
+
+        Account accountTwo = new Account();
+        accountTwo.setNumber("19806578940000999988887777");
+        accountTwo.setBalance(Balance.of(new BigDecimal(1_000_000)));
+
+        accountRepository.create(accountOne);
+        accountRepository.create(accountTwo);
     }
 }
