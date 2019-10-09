@@ -67,13 +67,11 @@ public class AssetTransferController extends AbstractController {
     }
 
     private Account findAccount(String senderAccountNumber) throws RequestException {
-        Account senderAccount;
         try {
-            senderAccount = accountRepository.findByAccountNumber(senderAccountNumber);
+            return accountRepository.findByAccountNumber(senderAccountNumber);
         } catch (NoResultException e) {
             throw new RequestException(String.format("Account number '%s' does not exist", senderAccountNumber));
         }
-        return senderAccount;
     }
 
     private Optional<String> getParamValue(Request request, String paramName) {
