@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.valychbreak.moneytransfer.config.MainModule;
+import com.valychbreak.moneytransfer.controller.AccountController;
 import com.valychbreak.moneytransfer.controller.AssetTransferController;
 import com.valychbreak.moneytransfer.exception.RequestException;
 import com.valychbreak.moneytransfer.http.HttpContentType;
@@ -25,8 +26,12 @@ public class Application {
 
     static void establishRoutes(Injector injector) {
         final AssetTransferController assetTransferController = injector.getInstance(AssetTransferController.class);
+        final AccountController accountController = injector.getInstance(AccountController.class);
 
         post("/transfer", HttpContentType.APPLICATION_JSON, assetTransferController::handle);
+
+        // For testing purpose only
+        get("/account", HttpContentType.APPLICATION_JSON, accountController::handle);
 
         after((req, res) -> res.type(HttpContentType.APPLICATION_JSON));
 
