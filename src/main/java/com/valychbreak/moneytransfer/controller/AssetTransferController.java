@@ -16,6 +16,8 @@ import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static java.math.BigDecimal.ZERO;
+
 @Slf4j
 @Singleton
 public class AssetTransferController extends AbstractController {
@@ -44,9 +46,20 @@ public class AssetTransferController extends AbstractController {
                 getParamValue(request, "asset_amount")
                         .orElseThrow(() -> new RequestException("'asset_amount' param is not specified"));
 
+        BigDecimal transferAmount;
+        try {
+            transferAmount = new BigDecimal(assetAmountValue);
+        } catch (NumberFormatException e) {
+            throw new RequestException("'asset_amount' param must be a number");
+        }
+
+        if (transferAmount.compareTo(ZERO) <= 0) {
+            throw new RequestException("'asset_amount' param must be positive");
+        }
+
         Account senderAccount = findAccount(senderAccountNumber);
         Account receiverAccount = findAccount(receiverAccountNumber);
-        accountAssetService.transfer(senderAccount, receiverAccount, new BigDecimal(assetAmountValue));
+        accountAssetService.transfer(senderAccount, receiverAccount, transferAmount);
 
         return ResponseEntity.empty();
     }

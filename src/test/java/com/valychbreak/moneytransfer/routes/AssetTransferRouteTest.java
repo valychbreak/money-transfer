@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -157,5 +158,48 @@ class AssetTransferRouteTest {
                 .statusCode(HttpStatus.BAD_REQUEST)
                 .body("data.error", equalTo("Invalid request"))
                 .body("data.error_description", equalTo(String.format("Account number '%s' does not exist", NON_EXISTING_ACCOUNT_NUMBER)));
+    }
+
+    @Test
+    void shouldReturnErrorWhenAmountIsNotNumber() {
+        Account sender = aRandomAccount().build();
+        Account receiver = aRandomAccount().build();
+        accountRepository.create(sender);
+        accountRepository.create(receiver);
+
+        given()
+                .urlEncodingEnabled(true)
+                .param("sender_account", sender.getNumber())
+                .param("receiver_account", receiver.getNumber())
+                .param("asset_amount", "Amount1000")
+                .accept(ContentType.JSON)
+            .when()
+                .post("/transfer")
+            .then()
+                .statusCode(HttpStatus.BAD_REQUEST)
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("'asset_amount' param must be a number"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {0, -0.01, -10055})
+    void shouldReturnErrorWhenAmountIsNegative(double assetAmount) {
+        Account sender = aRandomAccount().build();
+        Account receiver = aRandomAccount().build();
+        accountRepository.create(sender);
+        accountRepository.create(receiver);
+
+        given()
+                .urlEncodingEnabled(true)
+                .param("sender_account", sender.getNumber())
+                .param("receiver_account", receiver.getNumber())
+                .param("asset_amount", assetAmount)
+                .accept(ContentType.JSON)
+            .when()
+                .post("/transfer")
+            .then()
+                .statusCode(HttpStatus.BAD_REQUEST)
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("'asset_amount' param must be positive"));
     }
 }
