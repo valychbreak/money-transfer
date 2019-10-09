@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.TypedQuery;
 
 @Singleton
@@ -22,7 +23,8 @@ public class AccountRepository {
     public Account findByAccountNumber(String number) {
         TypedQuery<Account> accountByNumberQuery = getEntityManager()
                 .createQuery("SELECT account From Account account where account.number = :number", Account.class)
-                .setParameter("number", number);
+                .setParameter("number", number)
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE);
 
         return accountByNumberQuery.getSingleResult();
     }

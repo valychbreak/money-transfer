@@ -1,5 +1,6 @@
 package com.valychbreak.moneytransfer.routes;
 
+import com.google.inject.persist.Transactional;
 import com.valychbreak.moneytransfer.ApiTestExtension;
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.domain.Balance;
@@ -13,6 +14,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 
 import static com.valychbreak.moneytransfer.service.AccountBuilder.aRandomAccount;
@@ -33,7 +36,11 @@ class AssetTransferRouteTest {
     @Inject
     private AccountRepository accountRepository;
 
+    @Inject
+    private Provider<EntityManager> entityManagerProvider;
+
     @Test
+    @Transactional
     void shouldTransferAssetsFromSenderToReceiver() {
 
         Account senderAccount = anAccount()
@@ -61,11 +68,21 @@ class AssetTransferRouteTest {
                 .statusCode(HttpStatus.OK)
                 .contentType(ContentType.JSON);
 
+        beginTransaction();
         senderAccount = accountRepository.findByAccountNumber(SENDER_ACCOUNT_NUMBER);
         receiverAccount = accountRepository.findByAccountNumber(RECEIVER_ACCOUNT_NUMBER);
+        commitTransaction();
 
         assertThat(senderAccount.getBalance()).isEqualTo(Balance.of(new BigDecimal(4990)));
         assertThat(receiverAccount.getBalance()).isEqualTo(Balance.of(new BigDecimal(110)));
+    }
+
+    private void commitTransaction() {
+        entityManagerProvider.get().getTransaction().commit();
+    }
+
+    private void beginTransaction() {
+        entityManagerProvider.get().getTransaction().begin();
     }
 
     @ParameterizedTest
