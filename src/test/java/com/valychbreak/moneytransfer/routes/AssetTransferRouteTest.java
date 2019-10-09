@@ -97,8 +97,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("Endpoint with requested parameters does not exist"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("Endpoint with requested parameters does not exist"));
     }
 
     @Test
@@ -109,8 +109,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("'sender_account' param is not specified"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("'sender_account' param is not specified"));
     }
 
     @Test
@@ -123,8 +123,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("'receiver_account' param is not specified"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("'receiver_account' param is not specified"));
     }
 
     @Test
@@ -138,8 +138,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("'asset_amount' param is not specified"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("'asset_amount' param is not specified"));
     }
 
     @Test
@@ -154,8 +154,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo(String.format("Account number '%s' does not exist", NON_EXISTING_ACCOUNT_NUMBER)));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo(String.format("Account number '%s' does not exist", NON_EXISTING_ACCOUNT_NUMBER)));
     }
 
     @Test
@@ -173,8 +173,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo(String.format("Account number '%s' does not exist", NON_EXISTING_ACCOUNT_NUMBER)));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo(String.format("Account number '%s' does not exist", NON_EXISTING_ACCOUNT_NUMBER)));
     }
 
     @Test
@@ -194,8 +194,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("'asset_amount' param must be a number"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("'asset_amount' param must be a number"));
     }
 
     @ParameterizedTest
@@ -216,8 +216,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("Amount must be positive"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("Amount must be positive"));
     }
 
     @Test
@@ -244,8 +244,8 @@ class AssetTransferRouteTest {
                 .post("/transfer")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("Sender account has insufficient balance"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("Sender account has insufficient balance"));
     }
 
     @Test
@@ -263,7 +263,7 @@ class AssetTransferRouteTest {
                 .post("/transfer")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
-                .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("Sender and Receiver accounts cannot be the same"));
+                .body("error", equalTo("Invalid request"))
+                .body("error_description", equalTo("Sender and Receiver accounts cannot be the same"));
     }
 }

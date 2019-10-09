@@ -62,7 +62,7 @@ public class Application {
         notFound(((req, res) -> {
             ResponseError responseError = ResponseError.of("Endpoint with requested parameters does not exist");
             res.status(HttpStatus.BAD_REQUEST);
-            return json(responseError);
+            return json(responseError.getData());
         }));
 
         exception(RequestException.class, (exception, req, res) -> {
@@ -72,11 +72,11 @@ public class Application {
             ResponseError responseError = ResponseError.of(exception);
 
             try {
-                String errorAsJson = json(responseError);
+                String errorAsJson = json(responseError.getData());
                 res.body(errorAsJson);
             } catch (JsonProcessingException e) {
                 log.error("Could not construct JSON of response error: [{}]", responseError, e);
-                res.body("{ \"data\": {\"error\":\"Failed to construct response entity\" }");
+                res.body("{\"error\":\"Failed to construct response entity\"}");
             }
         });
     }
