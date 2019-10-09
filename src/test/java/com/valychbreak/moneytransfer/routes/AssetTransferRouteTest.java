@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 
+import static com.valychbreak.moneytransfer.service.AccountBuilder.aRandomAccount;
 import static com.valychbreak.moneytransfer.service.AccountBuilder.anAccount;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +27,7 @@ class AssetTransferRouteTest {
 
     private static final String SENDER_ACCOUNT_NUMBER = RandomStringUtils.randomAlphabetic(Account.ACCOUNT_NUMBER_LENGTH);
     private static final String RECEIVER_ACCOUNT_NUMBER = RandomStringUtils.randomAlphabetic(Account.ACCOUNT_NUMBER_LENGTH);
+    private static final String NON_EXISTING_ACCOUNT_NUMBER = RandomStringUtils.randomAlphabetic(Account.ACCOUNT_NUMBER_LENGTH);
 
     @Inject
     private AccountRepository accountRepository;
@@ -120,5 +122,40 @@ class AssetTransferRouteTest {
                 .statusCode(HttpStatus.BAD_REQUEST)
                 .body("data.error", equalTo("Invalid request"))
                 .body("data.error_description", equalTo("'asset_amount' param is not specified"));
+    }
+
+    @Test
+    void shouldReturnErrorWhenSenderDoesNotExist() {
+        given()
+                .urlEncodingEnabled(true)
+                .param("sender_account", NON_EXISTING_ACCOUNT_NUMBER)
+                .param("receiver_account", RECEIVER_ACCOUNT_NUMBER)
+                .param("asset_amount", 1000)
+                .accept(ContentType.JSON)
+            .when()
+                .post("/transfer")
+            .then()
+                .statusCode(HttpStatus.BAD_REQUEST)
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo(String.format("Account number '%s' does not exist", NON_EXISTING_ACCOUNT_NUMBER)));
+    }
+
+    @Test
+    void shouldReturnErrorWhenReceiverDoesNotExist() {
+        Account sender = aRandomAccount().build();
+        accountRepository.create(sender);
+
+        given()
+                .urlEncodingEnabled(true)
+                .param("sender_account", sender.getNumber())
+                .param("receiver_account", NON_EXISTING_ACCOUNT_NUMBER)
+                .param("asset_amount", 1000)
+                .accept(ContentType.JSON)
+            .when()
+                .post("/transfer")
+            .then()
+                .statusCode(HttpStatus.BAD_REQUEST)
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo(String.format("Account number '%s' does not exist", NON_EXISTING_ACCOUNT_NUMBER)));
     }
 }

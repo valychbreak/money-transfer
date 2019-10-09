@@ -6,14 +6,17 @@ import com.valychbreak.moneytransfer.exception.RequestException;
 import com.valychbreak.moneytransfer.http.ResponseEntity;
 import com.valychbreak.moneytransfer.repository.AccountRepository;
 import com.valychbreak.moneytransfer.service.AccountAssetService;
+import lombok.extern.slf4j.Slf4j;
 import spark.Request;
 import spark.Response;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+@Slf4j
 @Singleton
 public class AssetTransferController extends AbstractController {
 
@@ -41,11 +44,21 @@ public class AssetTransferController extends AbstractController {
                 getParamValue(request, "asset_amount")
                         .orElseThrow(() -> new RequestException("'asset_amount' param is not specified"));
 
-        Account senderAccount = accountRepository.findByAccountNumber(senderAccountNumber);
-        Account receiverAccount = accountRepository.findByAccountNumber(receiverAccountNumber);
+        Account senderAccount = findAccount(senderAccountNumber);
+        Account receiverAccount = findAccount(receiverAccountNumber);
         accountAssetService.transfer(senderAccount, receiverAccount, new BigDecimal(assetAmountValue));
 
         return ResponseEntity.empty();
+    }
+
+    private Account findAccount(String senderAccountNumber) throws RequestException {
+        Account senderAccount;
+        try {
+            senderAccount = accountRepository.findByAccountNumber(senderAccountNumber);
+        } catch (NoResultException e) {
+            throw new RequestException(String.format("Account number '%s' does not exist", senderAccountNumber));
+        }
+        return senderAccount;
     }
 
     private Optional<String> getParamValue(Request request, String paramName) {
