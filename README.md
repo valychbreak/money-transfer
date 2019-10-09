@@ -40,7 +40,7 @@ For the sake of testing, 2 accounts are being created on startup:
  - 19806578940000111122223333
  - 19806578940000999988887777
 
-To check their balance:
+To check their balance (Note: /account endpoint was created for testing purpose):
 
 `curl -X GET http://localhost:8080/account?account_number=19806578940000111122223333`
 
