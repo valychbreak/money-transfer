@@ -29,14 +29,14 @@ public class AccountRepository {
         return accountByNumberQuery.getSingleResult();
     }
 
-    private EntityManager getEntityManager() {
-        return entityManagerProvider.get();
-    }
-
     @Transactional
     public void create(Account account) {
         EntityManager entityManager = getEntityManager();
         entityManager.persist(account);
         entityManager.flush();
+    }
+
+    private EntityManager getEntityManager() {
+        return entityManagerProvider.get();
     }
 }

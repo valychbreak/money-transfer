@@ -8,7 +8,7 @@ public class ResponseEntity<T> {
     @Getter
     private final T data;
 
-    ResponseEntity() {
+    private ResponseEntity() {
         this.data = null;
     }
 
