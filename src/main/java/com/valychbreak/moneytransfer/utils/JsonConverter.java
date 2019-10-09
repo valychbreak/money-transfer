@@ -7,6 +7,9 @@ public class JsonConverter {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static String json(Object object) throws JsonProcessingException {
+        if (object == null) {
+            return "{}";
+        }
         return OBJECT_MAPPER.writeValueAsString(object);
     }
 }

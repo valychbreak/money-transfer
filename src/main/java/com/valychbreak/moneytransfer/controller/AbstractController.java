@@ -21,7 +21,7 @@ public abstract class AbstractController {
 
     private String convertToJson(ResponseEntity<?> responseEntity) throws RequestException {
         try {
-            return json(responseEntity);
+            return json(responseEntity.getData());
         } catch (JsonProcessingException e) {
             log.error("Could not construct json from ResponseEntity: [{}]", responseEntity, e);
             throw new RequestException("Failed to convert response entity to JSON", e);
