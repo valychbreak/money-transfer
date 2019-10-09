@@ -6,11 +6,16 @@ import com.google.inject.Injector;
 import com.valychbreak.moneytransfer.config.MainModule;
 import com.valychbreak.moneytransfer.controller.AccountController;
 import com.valychbreak.moneytransfer.controller.AssetTransferController;
+import com.valychbreak.moneytransfer.domain.Account;
+import com.valychbreak.moneytransfer.domain.Balance;
 import com.valychbreak.moneytransfer.exception.RequestException;
 import com.valychbreak.moneytransfer.http.HttpContentType;
 import com.valychbreak.moneytransfer.http.HttpStatus;
 import com.valychbreak.moneytransfer.http.ResponseError;
+import com.valychbreak.moneytransfer.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
+
+import java.math.BigDecimal;
 
 import static com.valychbreak.moneytransfer.utils.JsonConverter.json;
 import static spark.Spark.*;
@@ -21,7 +26,26 @@ public class Application {
         port(8080);
 
         Injector injector = Guice.createInjector(new MainModule());
+
+        // For testing purpose only
+        createTestAccounts(injector);
+
         establishRoutes(injector);
+    }
+
+    private static void createTestAccounts(Injector injector) {
+        AccountRepository accountRepository = injector.getInstance(AccountRepository.class);
+
+        Account accountOne = new Account();
+        accountOne.setNumber("19806578940000111122223333");
+        accountOne.setBalance(Balance.of(new BigDecimal(1_000_000)));
+
+        Account accountTwo = new Account();
+        accountTwo.setNumber("19806578940000999988887777");
+        accountTwo.setBalance(Balance.of(new BigDecimal(1_000_000)));
+
+        accountRepository.create(accountOne);
+        accountRepository.create(accountTwo);
     }
 
     static void establishRoutes(Injector injector) {
