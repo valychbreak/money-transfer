@@ -2,6 +2,7 @@ package com.valychbreak.moneytransfer.service;
 
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.domain.Balance;
+import com.valychbreak.moneytransfer.exception.DataValidationException;
 import com.valychbreak.moneytransfer.exception.InsufficientBalanceException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ class AccountAssetServiceTest {
     }
 
     @Test
-    void shouldTransferAssetsFromOneAccountToAnother() {
+    void shouldTransferAssetsFromOneAccountToAnother() throws DataValidationException {
         Account senderAccount = anAccount()
                 .withRandomValidNumber()
                 .withBalance(50)
@@ -59,7 +60,7 @@ class AccountAssetServiceTest {
                 .withBalance(45)
                 .build();
 
-        assertThrows(IllegalArgumentException.class, () -> accountAssetService.transfer(sender, receiver, BigDecimal.ONE));
+        assertThrows(DataValidationException.class, () -> accountAssetService.transfer(sender, receiver, BigDecimal.ONE));
     }
 
     @ParameterizedTest
@@ -68,7 +69,7 @@ class AccountAssetServiceTest {
         Account sender = aRandomAccount().build();
         Account receiver = aRandomAccount().build();
 
-        IllegalArgumentException thrownException = assertThrows(IllegalArgumentException.class, () -> {
+        Exception thrownException = assertThrows(DataValidationException.class, () -> {
             accountAssetService.transfer(sender, receiver, new BigDecimal(amount));
         });
 

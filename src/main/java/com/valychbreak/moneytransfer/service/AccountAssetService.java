@@ -1,6 +1,7 @@
 package com.valychbreak.moneytransfer.service;
 
 import com.valychbreak.moneytransfer.domain.Account;
+import com.valychbreak.moneytransfer.exception.DataValidationException;
 import com.valychbreak.moneytransfer.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
@@ -8,13 +9,13 @@ import java.math.BigDecimal;
 import static java.math.BigDecimal.ZERO;
 
 public class AccountAssetService {
-    public void transfer(Account sender, Account receiver, BigDecimal amount) {
+    public void transfer(Account sender, Account receiver, BigDecimal amount) throws DataValidationException {
         if (sender.equals(receiver)) {
-            throw new IllegalArgumentException("Sender and Receiver accounts cannot be the same");
+            throw new DataValidationException("Sender and Receiver accounts cannot be the same");
         }
 
         if (amount.compareTo(ZERO) < 0 || amount.equals(ZERO)) {
-            throw new IllegalArgumentException("Amount must be positive");
+            throw new DataValidationException("Amount must be positive");
         }
 
         if (sender.getBalance().getAmount().compareTo(amount) < 0) {

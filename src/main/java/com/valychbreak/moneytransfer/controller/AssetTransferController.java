@@ -2,6 +2,7 @@ package com.valychbreak.moneytransfer.controller;
 
 import com.google.inject.persist.Transactional;
 import com.valychbreak.moneytransfer.domain.Account;
+import com.valychbreak.moneytransfer.exception.DataValidationException;
 import com.valychbreak.moneytransfer.exception.RequestException;
 import com.valychbreak.moneytransfer.http.ResponseEntity;
 import com.valychbreak.moneytransfer.repository.AccountRepository;
@@ -59,7 +60,12 @@ public class AssetTransferController extends AbstractController {
 
         Account senderAccount = findAccount(senderAccountNumber);
         Account receiverAccount = findAccount(receiverAccountNumber);
-        accountAssetService.transfer(senderAccount, receiverAccount, transferAmount);
+
+         try {
+            accountAssetService.transfer(senderAccount, receiverAccount, transferAmount);
+        } catch (DataValidationException e) {
+            throw new RequestException(e.getMessage());
+        }
 
         return ResponseEntity.empty();
     }
