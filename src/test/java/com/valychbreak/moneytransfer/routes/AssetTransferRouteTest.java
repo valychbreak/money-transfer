@@ -202,4 +202,51 @@ class AssetTransferRouteTest {
                 .body("data.error", equalTo("Invalid request"))
                 .body("data.error_description", equalTo("Amount must be positive"));
     }
+
+    @Test
+    void shouldReturnErrorWhenSenderDoesNotHaveSufficientBalance() {
+        int senderBalance = 1000;
+        int transferAmount = 5000;
+
+        Account sender = aRandomAccount()
+                .withBalance(senderBalance)
+                .build();
+
+        Account receiver = aRandomAccount().build();
+
+        accountRepository.create(sender);
+        accountRepository.create(receiver);
+
+        given()
+                .urlEncodingEnabled(true)
+                .param("sender_account", sender.getNumber())
+                .param("receiver_account", receiver.getNumber())
+                .param("asset_amount", transferAmount)
+                .accept(ContentType.JSON)
+                .when()
+                .post("/transfer")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST)
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("Sender account has insufficient balance"));
+    }
+
+    @Test
+    void shouldReturnErrorWhenSenderAccountNumberIsEqualToReceiver() {
+        Account sender = aRandomAccount().build();
+        accountRepository.create(sender);
+
+        given()
+                .urlEncodingEnabled(true)
+                .param("sender_account", sender.getNumber())
+                .param("receiver_account", sender.getNumber())
+                .param("asset_amount", 1000)
+                .accept(ContentType.JSON)
+                .when()
+                .post("/transfer")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST)
+                .body("data.error", equalTo("Invalid request"))
+                .body("data.error_description", equalTo("Sender and Receiver accounts cannot be the same"));
+    }
 }
