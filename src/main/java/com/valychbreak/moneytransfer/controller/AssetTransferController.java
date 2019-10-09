@@ -43,9 +43,11 @@ public class AssetTransferController extends AbstractController {
         try {
             accountAssetService.transfer(senderAccount, receiverAccount, assetTransferDto.getTransferAmount());
         } catch (DataValidationException e) {
+             log.error("Failed to transfer assets. Transfer data: {}", assetTransferDto, e);
             throw new RequestException(e.getMessage());
         }
 
+        log.info("Successfully transferred assets. Transfer data: {}", assetTransferDto);
         return ResponseEntity.empty();
     }
 

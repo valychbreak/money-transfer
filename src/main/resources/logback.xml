@@ -7,9 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.valychbreak.moneytransfer" level="DEBUG">
-
-    </logger>
+    <logger name="com.valychbreak.moneytransfer" level="DEBUG" />
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
