@@ -6,7 +6,6 @@ import com.valychbreak.moneytransfer.domain.Balance;
 import com.valychbreak.moneytransfer.http.HttpStatus;
 import com.valychbreak.moneytransfer.repository.AccountRepository;
 import io.restassured.http.ContentType;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +18,7 @@ import java.math.BigDecimal;
 import static com.valychbreak.moneytransfer.service.AccountBuilder.aRandomAccount;
 import static com.valychbreak.moneytransfer.service.AccountBuilder.anAccount;
 import static io.restassured.RestAssured.given;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
@@ -26,9 +26,9 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 @ExtendWith(ApiTestExtension.class)
 class AssetTransferRouteTest {
 
-    private static final String SENDER_ACCOUNT_NUMBER = RandomStringUtils.randomAlphabetic(Account.ACCOUNT_NUMBER_LENGTH);
-    private static final String RECEIVER_ACCOUNT_NUMBER = RandomStringUtils.randomAlphabetic(Account.ACCOUNT_NUMBER_LENGTH);
-    private static final String NON_EXISTING_ACCOUNT_NUMBER = RandomStringUtils.randomAlphabetic(Account.ACCOUNT_NUMBER_LENGTH);
+    private static final String SENDER_ACCOUNT_NUMBER = randomNumeric(Account.ACCOUNT_NUMBER_LENGTH);
+    private static final String RECEIVER_ACCOUNT_NUMBER = randomNumeric(Account.ACCOUNT_NUMBER_LENGTH);
+    private static final String NON_EXISTING_ACCOUNT_NUMBER = randomNumeric(Account.ACCOUNT_NUMBER_LENGTH);
 
     @Inject
     private AccountRepository accountRepository;

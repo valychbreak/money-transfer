@@ -6,12 +6,12 @@ import com.google.inject.Injector;
 import com.valychbreak.moneytransfer.config.PersistenceModule;
 import com.valychbreak.moneytransfer.config.RepositoryModule;
 import com.valychbreak.moneytransfer.domain.Account;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.valychbreak.moneytransfer.service.AccountBuilder.anAccount;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AccountRepositoryIntegrationTest {
@@ -33,7 +33,7 @@ class AccountRepositoryIntegrationTest {
 
     @Test
     void shouldFindAccountByNumber() {
-        String accountNumber = RandomStringUtils.randomAlphabetic(26);
+        String accountNumber = randomNumeric(26);
         Account account = anAccount()
                 .withNumber(accountNumber)
                 .withBalance(5000)

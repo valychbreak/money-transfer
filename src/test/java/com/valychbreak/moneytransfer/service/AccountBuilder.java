@@ -2,10 +2,11 @@ package com.valychbreak.moneytransfer.service;
 
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.domain.Balance;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.math.BigDecimal;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
 public class AccountBuilder {
     private String number;
@@ -24,7 +25,7 @@ public class AccountBuilder {
     }
 
     public AccountBuilder withRandomValidNumber() {
-        this.number = RandomStringUtils.randomAlphabetic(26);
+        this.number = randomNumeric(26);
         return this;
     }
 

@@ -3,8 +3,6 @@ package com.valychbreak.moneytransfer.service;
 import com.valychbreak.moneytransfer.domain.Account;
 import com.valychbreak.moneytransfer.domain.Balance;
 import com.valychbreak.moneytransfer.exception.DataValidationException;
-import com.valychbreak.moneytransfer.exception.InsufficientBalanceException;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,6 +12,7 @@ import java.math.BigDecimal;
 
 import static com.valychbreak.moneytransfer.service.AccountBuilder.aRandomAccount;
 import static com.valychbreak.moneytransfer.service.AccountBuilder.anAccount;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -49,7 +48,7 @@ class AccountAssetServiceTest {
 
     @Test
     void shouldThrowExceptionWhenAccountNumbersAreTheSame() {
-        String accountNumber = RandomStringUtils.randomAlphabetic(26);
+        String accountNumber = randomNumeric(26);
         Account sender = anAccount()
                 .withNumber(accountNumber)
                 .withBalance(100)
