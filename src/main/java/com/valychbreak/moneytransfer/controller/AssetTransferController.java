@@ -54,10 +54,6 @@ public class AssetTransferController extends AbstractController {
             throw new RequestException("'asset_amount' param must be a number");
         }
 
-        if (transferAmount.compareTo(ZERO) <= 0) {
-            throw new RequestException("'asset_amount' param must be positive");
-        }
-
         Account senderAccount = findAccount(senderAccountNumber);
         Account receiverAccount = findAccount(receiverAccountNumber);
 

@@ -81,6 +81,6 @@ class AccountAssetServiceTest {
         Account sender = aRandomAccount().withBalance(10).build();
         Account receiver = aRandomAccount().build();
 
-        assertThrows(InsufficientBalanceException.class, () -> accountAssetService.transfer(sender, receiver, new BigDecimal(11)));
+        assertThrows(DataValidationException.class, () -> accountAssetService.transfer(sender, receiver, new BigDecimal(11)));
     }
 }

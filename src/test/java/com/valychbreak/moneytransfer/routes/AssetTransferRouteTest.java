@@ -200,6 +200,6 @@ class AssetTransferRouteTest {
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST)
                 .body("data.error", equalTo("Invalid request"))
-                .body("data.error_description", equalTo("'asset_amount' param must be positive"));
+                .body("data.error_description", equalTo("Amount must be positive"));
     }
 }
