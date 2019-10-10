@@ -40,7 +40,6 @@ class AssetTransferRouteTest {
     private Provider<EntityManager> entityManagerProvider;
 
     @Test
-    @Transactional
     void shouldTransferAssetsFromSenderToReceiver() {
 
         Account senderAccount = anAccount()
